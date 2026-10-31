@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Cairo', sans-serif; background-color: #f0f2f5; color: #1c1e21; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        h1 { font-size: 24px; color: #1a252f; }
+        .refresh-btn { background-color: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-family: 'Cairo'; cursor: pointer; font-size: 14px; box-shadow: 0 2px 5px rgba(0,123,255,0.3); }
+        
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h2 { font-size: 18px; margin-bottom: 15px; color: #555; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
+        
+        .balance-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f2f5; font-size: 16px; }
+        .balance-item:last-child { border-bottom: none; }
+        .balance-type { font-weight: 600; color: #333; }
+        .balance-amount { font-weight: 700; font-size: 18px; }
+        
+        .transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f2f5; }
+        .transaction-item:last-child { border-bottom: none; }
+        .tx-info { display: flex; flex-direction: column; }
+        .tx-date { font-size: 12px; color: #888; margin-top: 5px; }
+        .tx-type { font-weight: 600; font-size: 15px; }
+        
+        .amount { font-weight: 700; font-size: 16px; direction: ltr; }
+        .debit { color: #e74c3c; }
+        .credit { color: #2ecc71; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏦 Dashboard</h1>
+        <button class="refresh-btn" onclick="window.location.reload();">🔄 Refresh</button>
+    </div>
+    
+    <div class="card">
+        <h2>Available Balances</h2>
+        {% for balance in balances %}
+        <div class="balance-item">
+            <span class="balance-type">{{ balance.balance_type }}</span>
+            <span class="balance-amount {% if balance.balance_amount.amount|float < 0 %}debit{% else %}credit{% endif %}">
+                {{ balance.balance_amount.amount }} {{ balance.balance_amount.currency }}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="card">
+        <h2>Recent Transactions</h2>
+        {% for tx in transactions %}
+        <div class="transaction-item">
+            <div class="tx-info">
+                <span class="tx-type">{{ 'Debit' if tx.credit_debit_indicator == 'DBIT' else 'Credit' }}</span>
+                <span class="tx-date">{{ tx.booking_date }}</span>
+            </div>
+            <span class="amount {% if tx.credit_debit_indicator == 'DBIT' %}debit{% else %}credit{% endif %}">
+                {{ tx.transaction_amount.amount }} {{ tx.transaction_amount.currency }}
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
