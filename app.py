@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives import serialization
 app = Flask(__name__)
 
 APP_ID = os.environ.get("APP_ID", "664c0c2d-ef9a-4bd2-a85f-91e22bf6f48a")
-ACCOUNT_UID = os.environ.get("ACCOUNT_UID", "c9b98eb9-e0b5-4b41-85f8-273f55ce6889") 
+ACCOUNT_UID = os.environ.get("ACCOUNT_UID", "c9b98eb9-e0b5-4b41-85f8-273f55ce6889")
 
 def get_token():
     key_data = os.environ.get("PRIVATE_KEY")
@@ -23,9 +23,11 @@ def get_token():
 def index():
     token = get_token()
     headers = {"Authorization": f"Bearer {token}"}
+    
     bal_res = requests.get(f"https://api.enablebanking.com/accounts/{ACCOUNT_UID}/balances", headers=headers).json()
-    tx_res = reqapp.runuests.get(f"https://api.enablebanking.com/accounts/{ACCOUNT_UID}/transactions", headers=headers).json()
+    tx_res = requests.get(f"https://api.enablebanking.com/accounts/{ACCOUNT_UID}/transactions", headers=headers).json()
+    
     return render_template('index.html', balances=bal_res.get('balances', []), transactions=tx_res.get('transactions', []))
 
 if __name__ == '__main__':
-    (host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000)
